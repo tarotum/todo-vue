@@ -1,9 +1,17 @@
 <template>
   <div class="todo">
-    <h4 class="todo__title">{{ title }}</h4>
-    <p class="todo__description">{{ description }}</p>
-    <label for="checkbox">{{ completed }}</label>
-    <input class="todo__checkbox" type="checkbox" id="checkbox" v-model="completed">
+    <h4 class="todo__title">{{ todo.title }}</h4>
+    <p class="todo__description">{{ todo.description }}</p>
+    <label for="checkbox">{{ todo.completed }}</label>
+    <input
+      class="todo__checkbox"
+      type="checkbox"
+      id="checkbox"
+      v-model="todo.completed"
+      @change="handleChange"
+    >
+    <button @click="editTodo">Edit</button>
+    <button @click="removeTodo">Remove</button>
   </div>
 </template>
 
@@ -11,27 +19,21 @@
 export default {
   name: "TodoItem",
   props: {
-    id: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    },
-    isCompleted: {
-      type: Boolean,
+    todo: {
+      type: Object,
       required: true
     }
   },
-  data() {
-    return {
-      completed: this.isCompleted
-    };
+  methods: {
+    handleChange() {
+      this.$store.dispatch("updateTodo", this.todo);
+    },
+    removeTodo() {
+      this.$store.dispatch("removeTodo", this.todo._id);
+    },
+    editTodo() {
+      this.$store.commit("toogleEditTodo", this.todo._id);
+    }
   }
 };
 </script>

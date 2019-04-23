@@ -1,13 +1,6 @@
 <template>
   <div class="todo-list">
-    <TodoItem
-      v-for="todo in todos"
-      :key="todo._id"
-      :id="todo._id"
-      :title="todo.title"
-      :description="todo.description"
-      :isCompleted="todo.completed"
-    />
+    <TodoItem v-for="todo in todos" :key="todo._id" :todo="todo"/>
   </div>
 </template>
 <script>
@@ -18,21 +11,13 @@ export default {
   components: {
     TodoItem
   },
-  data() {
-    return {
-      todos: []
-    };
-  },
-  methods: {
-    async getTodos() {
-      const result = await this.$http.get("http://localhost:3000/");
-      if (result.status === 200) {
-        this.todos = result.data;
-      }
+  computed: {
+    todos() {
+      return this.$store.getters.getTodos;
     }
   },
-  mounted() {
-    this.getTodos();
+  created() {
+    this.$store.dispatch("getTodos");
   }
 };
 </script>

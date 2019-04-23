@@ -1,14 +1,58 @@
 <template>
-  <form class="todo-form">
-    <input class="todo-form__title" type="text">
-    <textarea class="todo-form__description"></textarea>
-    <button class="todo-form__button">Add todo</button>
+  <form class="todo-form" @submit.prevent="handleSumit">
+    <template v-if="editMode">
+      <input class="todo-form__title" type="text" v-model="editableTodo.title">
+      <textarea class="todo-form__description" v-model="editableTodo.description"></textarea>
+      <button class="todo-form__button">Edit</button>
+    </template>
+    <template v-else>
+      <input class="todo-form__title" type="text" v-model="title">
+      <textarea class="todo-form__description" v-model="description"></textarea>
+      <button class="todo-form__button">Add</button>
+    </template>
   </form>
 </template>
 
 <script>
 export default {
-  name: "TodoForm"
+  name: "TodoForm",
+  data() {
+    return {
+      title: "",
+      description: ""
+    };
+  },
+  computed: {
+    editMode() {
+      return this.$store.getters.getEditMode;
+    },
+    editableTodo() {
+      return this.$store.getters.getEditableTodo;
+    }
+  },
+  methods: {
+    async handleSumit() {
+      if (!this.editMode) {
+        await this.$store.dispatch("addTodo", {
+          title: this.title,
+          description: this.description,
+          completed: false
+        });
+      } else {
+        await this.$store.dispatch("updateTodo", {
+          _id: this.editableTodo._id,
+          title: this.editableTodo.title,
+          description: this.editableTodo.description,
+          completed: this.editableTodo.completed
+        });
+
+        this.$store.commit("toogleEditTodo");
+      }
+
+      this.title = "";
+      this.description = "";
+    }
+  }
 };
 </script>
 
