@@ -18,8 +18,11 @@ export default {
 </script>
 
 <style>
+* {
+  box-sizing: border-box;
+}
 ::selection {
-  background: #df91ad;
+  background: orangered;
 }
 body {
   background-color: #151d25;
@@ -29,15 +32,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   display: grid;
-  grid-template-columns: 5fr 3fr;
-  grid-template-rows: auto;
-  grid-template-areas: "TodoList TodoForm";
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "TodoForm"
+    "TodoList";
   grid-column-gap: 3em;
   max-width: 1180px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+}
+@media (min-width: 1100px) {
+  #app {
+    grid-template-columns: 5fr 3fr;
+    grid-template-rows: auto;
+    grid-template-areas: "TodoList TodoForm";
+  }
 }
 </style>

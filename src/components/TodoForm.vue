@@ -72,6 +72,7 @@ export default {
   color: #fff;
   border: 2px solid #fff;
   margin-bottom: 1em;
+  width: 100%;
 }
 .todo-form__description {
   min-height: 7em;
@@ -81,6 +82,7 @@ export default {
   color: #fff;
   border: 2px solid #fff;
   margin-bottom: 1.5em;
+  width: 100%;
 }
 
 .todo-form__button {
