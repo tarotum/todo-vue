@@ -1,6 +1,13 @@
 <template>
-  <div class="todo-list">
-    <TodoItem v-for="todo in todos" :key="todo._id" :todo="todo"/>
+  <div>
+    <div class="todo-list">
+      <TodoItem v-for="todo in todos" :key="todo._id" :todo="todo"/>
+    </div>
+    <div class="todo-filters">
+      <button>All</button>
+      <button>Active</button>
+      <button>Completed</button>
+    </div>
   </div>
 </template>
 <script>
@@ -13,11 +20,11 @@ export default {
   },
   computed: {
     todos() {
-      return this.$store.getters.getTodos;
+      return this.$store.getters["Todos/getTodos"];
     }
   },
   created() {
-    this.$store.dispatch("getTodos");
+    this.$store.dispatch("Todos/GET_TODOS");
   }
 };
 </script>

@@ -26,13 +26,13 @@ export default {
   },
   methods: {
     handleChange() {
-      this.$store.dispatch("updateTodo", this.todo);
+      this.$store.dispatch("Todos/UPDATE_TODO", this.todo);
     },
     removeTodo() {
-      this.$store.dispatch("removeTodo", this.todo._id);
+      this.$store.dispatch("Todos/REMOVE_TODO", this.todo._id);
     },
     editTodo() {
-      this.$store.commit("toogleEditTodo", this.todo._id);
+      this.$store.commit("Todos/SET_EDIT_TODO", this.todo._id);
     }
   }
 };

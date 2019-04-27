@@ -24,29 +24,29 @@ export default {
   },
   computed: {
     editMode() {
-      return this.$store.getters.getEditMode;
+      return this.$store.state.Todos.editMode;
     },
     editableTodo() {
-      return this.$store.getters.getEditableTodo;
+      return this.$store.getters["Todos/getEditableTodo"];
     }
   },
   methods: {
     async handleSumit() {
       if (!this.editMode) {
-        await this.$store.dispatch("addTodo", {
+        await this.$store.dispatch("Todos/SAVE_TODO", {
           title: this.title,
           description: this.description,
           completed: false
         });
       } else {
-        await this.$store.dispatch("updateTodo", {
+        await this.$store.dispatch("Todos/UPDATE_TODO", {
           _id: this.editableTodo._id,
           title: this.editableTodo.title,
           description: this.editableTodo.description,
           completed: this.editableTodo.completed
         });
 
-        this.$store.commit("toogleEditTodo");
+        this.$store.commit("Todos/SET_EDIT_TODO");
       }
 
       this.title = "";
