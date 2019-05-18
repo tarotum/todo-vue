@@ -1,16 +1,19 @@
-import axios from 'axios';
+import axios from "axios";
 
-const apiURL = 'https://todo-nodejs-api.herokuapp.com';
+import config from "../../config";
+
+const apiURL = config.API_BASE;
 
 const state = {
-  todos: null,
+  todos: [],
   editableTodo: null,
   editMode: false,
-  error: null
+  errors: []
 };
 const getters = {
   getTodos: state => state.todos,
-  getEditableTodo: state => state.editableTodo
+  getEditableTodo: state => state.editableTodo,
+  getErrors: state => state.errors
 };
 const mutations = {
   // payload must be array of todos
@@ -19,7 +22,7 @@ const mutations = {
   },
   // payload must be todo object
   ADD_TODO: (state, payload) => {
-    state.todos.push(payload);
+    state.todos = [...state.todos, payload];
   },
   // payload must be todo object
   EDIT_TODO(state, payload) {
@@ -39,51 +42,64 @@ const mutations = {
       state.editableTodo = null;
     }
   },
-  // payload must be error string
+
   SET_ERROR: (state, payload) => {
-    state.error = payload;
+    state.errors = [...state.errors, payload];
   }
 };
 const actions = {
   GET_TODOS: async context => {
     try {
-      const { data } = await axios.get(apiURL);
-      context.commit('SET_TODOS', data);
+      const { data, status } = await axios.get(apiURL);
+      if (status === 200) context.commit("SET_TODOS", data);
     } catch (error) {
       global.console.error(error.responce);
-      context.commit('SET_ERROR', 'get todos error');
+      context.commit("SET_ERROR", "get todos error");
     }
   },
   SAVE_TODO: async (context, payload) => {
     try {
-      const { data } = await axios.post(apiURL, payload);
-      context.commit('ADD_TODO', data);
+      const { data, status } = await axios.post(apiURL, payload);
+      if (status === 206) {
+        context.commit("SET_ERROR", data.errors);
+      } else {
+        context.commit("ADD_TODO", data);
+      }
     } catch (error) {
       global.console.error(error.responce);
-      context.commit('SET_ERROR', 'save todo error');
+      context.commit("SET_ERROR", {
+        network: { message: "Lost connection with server" }
+      });
     }
   },
   UPDATE_TODO: async (context, payload) => {
     const { _id, title, description, completed } = payload;
     try {
-      const { data } = await axios.put(`${apiURL}/${_id}`, {
+      const { data, status } = await axios.put(`${apiURL}/${_id}`, {
         title,
         description,
         completed
       });
-      context.commit('EDIT_TODO', data);
+
+      if (status === 206) {
+        context.commit("SET_ERROR", data.errors);
+      } else {
+        context.commit("EDIT_TODO", data);
+      }
     } catch (error) {
       global.console.error(error.responce);
-      context.commit('SET_ERROR', 'update todo error');
+      context.commit("SET_ERROR", {
+        network: { message: "Lost connection with server" }
+      });
     }
   },
   REMOVE_TODO: async (context, payload) => {
     try {
       await axios.delete(`${apiURL}/${payload}`);
-      context.commit('DELETE_TODO', payload);
+      context.commit("DELETE_TODO", payload);
     } catch (error) {
       global.console.error(error.responce);
-      context.commit('SET_ERROR', 'remove todo error');
+      context.commit("SET_ERROR", "remove todo error");
     }
   }
 };

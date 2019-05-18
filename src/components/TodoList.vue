@@ -52,17 +52,5 @@ export default {
 };
 </script>
 <style scoped>
-.todo-list {
-  grid-area: TodoList;
-  overflow-y: auto;
-  max-height: 70vh;
-  margin-top: 5em;
-}
-
-@media (min-width: 1100px) {
-  .todo-list {
-    padding-right: 1em;
-  }
-}
 </style>
 
